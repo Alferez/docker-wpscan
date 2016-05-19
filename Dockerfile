@@ -1,9 +1,5 @@
-FROM debian:8
-
-ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update
-RUN apt-get upgrade -y
-RUN apt-get install -y libreadline6 libreadline6-dev subversion git ruby build-essential libpq-dev bundler curl
+FROM ruby:latest
+MAINTAINER Jose A Alferez <correo@alferez.es>
 
 RUN mkdir /scripts
 WORKDIR /scripts
@@ -13,7 +9,8 @@ WORKDIR /scripts/wpscan
 RUN bundle install
 RUN chmod +x /scripts/wpscan/*.rb
 RUN ./wpscan.rb --update
-RUN echo "#! /bin/bash" >> /scripts/wpscan.sh
-RUN echo "/scripts/wpscan/wpscan.rb --update >/dev/null" >> /scripts/wpscan.sh
-RUN echo "/scripts/wpscan/wpscan.rb -u \$1" >> /scripts/wpscan.sh
-RUN chmod 777 /scripts/wpscan.sh
+RUN echo "#! /bin/bash" >> /wpscan.sh
+RUN echo "/scripts/wpscan/wpscan.rb --update >/dev/null" >> /wpscan.sh
+RUN echo '/scripts/wpscan/wpscan.rb --follow-redirection --user-agent "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:33.0) Gecko/20100101 Firefox/33.0" -v -e vp,vt --url $1'  >> /wpscan.sh
+RUN chmod 777 /wpscan.sh
+CMD echo "Use docker run --rm -ti alferez/wpscan /wpscan.sh DOMAIN.COM"
