@@ -3,7 +3,7 @@ MAINTAINER Jose A Alferez <correo@alferez.es>
 
 RUN mkdir /scripts
 WORKDIR /scripts
-RUN git clone git://github.com/wpscanteam/wpscan.git
+ADD ./wpscan /scripts/wpscan
 
 WORKDIR /scripts/wpscan
 RUN bundle install
